@@ -4,16 +4,18 @@ MAINTAINER phyng
 
 # postgres pillow lxml M2Crypto geolibs
 RUN apt-get update && apt-get install -y \
-    libpq-dev python-dev \
+    build-essential libssl-dev libffi-dev \
+    python-setuptools python-dev pypy-dev \
+    libpq-dev \
     libtiff5-dev libjpeg8-dev zlib1g-dev \
     libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk \
     libxml2-dev libxslt1-dev python-lxml \
     swig \
     binutils libproj-dev gdal-bin \
+    && apt-get -y --force-yes build-dep python-lxml \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get build-dep python-lxml
 
 # https://github.com/docker-library/pypy
 ENV PYPY_VERSION 4.0.1
@@ -24,3 +26,5 @@ RUN set -x \
 ENV PYTHON_PIP_VERSION 7.1.2
 RUN curl -SL 'https://bootstrap.pypa.io/get-pip.py' | pypy \
 	&& pip install --upgrade pip==$PYTHON_PIP_VERSION
+
+RUN pip install lxml==3.4.2 pillow
